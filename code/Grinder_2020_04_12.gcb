@@ -1,0 +1,93 @@
+'''A demonstration program for GCGB and GCB.
+'''--------------------------------------------------------------------------------------------------------------------------------
+'''This program
+'''
+'''
+'''@author
+'''@licence GPL
+'''@version
+'''@date    01.11.2015
+'''********************************************************************************
+
+; ----- Configuration
+
+ 'This program will alter the brightness of an LED using
+    'CCP/PWM.
+
+'Select chip model and speed
+#chip 12F1840, 16
+#config LVP = Off
+#config MCLRE = OFF
+#config WDTEN= OFF
+
+#define LED_ON Set PortA.5 ON
+#define LED_OFF Set PortA.5 OFF
+#define Button PORTA.4
+'#define USART_BAUD_RATE 9600
+'Set the CCP1 pin to output mode
+DIR PORTA.2 out 'Do not change. This is the PWM output
+DIR PORTA.4 IN  'Push Button Switch
+TRISA4=1
+ANSA4=0
+DIR PORTA.0 in  'Current Feedback
+
+TRISA0=1
+ANSA0=1
+DIR PortA.5 Out 'LED Pin
+
+Dim PWMDutyCycle as Byte
+Dim LoopCount as Byte
+Dim ADval as Byte
+Dim CurrentCounter as Byte
+
+ADPREF = 0
+PORTA.2=0
+ADCVal = 0
+CurrentCounter=0
+
+'TXCKSEL=1
+'Main code
+
+Wait 2000 ms
+
+LED_OFF
+do
+
+  If PORTA.4 = 1 then
+    LED_ON
+      For LoopCount = 0 to 0 ' do this loop only once
+        For PWMDutyCycle = 128 to 255 'Ramp Function
+          HPWM 1, 10, PWMDutyCycle
+          wait 10 ms
+        If PWMDutyCycle = 255 then Exit For
+        Next
+      Next
+      HPWM 1, 10, 255
+    End If
+  ADval=ReadAD(AN0)
+
+  'HSerPrint CurrentCounter
+  'HSerSend 13
+  'HSerSend 10
+  Wait 1000 ms
+
+
+  If ADval < 50 then 'sets the level for detection
+    CurrentCounter++
+  end if
+
+  if CurrentCounter >= 15 then 'sets the number of times the current
+                                'goes below the set level.
+    CurrentCounter=0
+    PORTA.2 = 0
+    PWMDutyCycle = 0
+    HPWMOFF (1)
+    LED_ON
+    Wait 3000 ms
+    LED_OFF
+  end if
+
+
+
+LED_OFF
+loop
