@@ -10,4 +10,5 @@ Mount: https://www.servocity.com/hd-premium-planetary-gear-motor-mount-face-thru
 
 The software works as follows: Ramps up within a second or two from 25% to 100% full speed and then counts when the current goes below a minimum value. Once the current goes below that value, it shuts the motor off and waits for the user to press a button again. I had to measure the current using debugging and then average it out in excel to find a minimum value for when the coffee is ground.  During grinding the current is mostly higher than this min, so it wont trigger, but when the grinder is idling, it will hit that minumum more often. 
 
-
+![alt text](https://raw.githubusercontent.com/chrissavage2300/Coffee-Grinder-Motor-Controller/master/photos/20200422_190338%5B2%5D.jpg)
+![alt text](https://raw.githubusercontent.com/chrissavage2300/Coffee-Grinder-Motor-Controller/master/photos/20200422_184211%5B1%5D.jpg)
